@@ -93,7 +93,7 @@ The workflows are designed with focus on:
 ## 🎥 Demo Video
 A demonstration of both workflows is available here:
 
-[Watch Demo Video](YOUR_VIDEO_LINK_HERE)
+[Watch Demo Video](https://www.loom.com/share/d64c0886a6e342cbb5ecb7dbbeefeacd)
 
 ---
 
