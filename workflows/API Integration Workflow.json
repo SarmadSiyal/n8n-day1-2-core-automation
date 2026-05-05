@@ -1,0 +1,201 @@
+{
+  "name": "API Integration Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "get-users",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "a83bdbfc-2bb9-400d-9724-f571a7757fcf",
+      "name": "Trigger API Request",
+      "webhookId": "69e717e7-0ec2-4d5e-944b-c7e980e16596"
+    },
+    {
+      "parameters": {
+        "url": "https://jsonplaceholder.typicode.com/users",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "1ca5db6e-7f02-407e-9dce-2a4bb166e4e4",
+      "name": "Fetch Users from API",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "551c2fef-3804-4d5b-9b90-826fb5284491",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "957abbf2-1d19-479c-8f21-b90c916b0815",
+      "name": "Check API Response Status"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "64944c3c-fcba-44bc-9b80-3ec5ab57b479",
+              "name": "total_users",
+              "value": "={{ $input.all().length }}",
+              "type": "string"
+            },
+            {
+              "id": "7bc3916b-22b6-474a-81d7-f32d69fa90c4",
+              "name": "users",
+              "value": "={{$json}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        -112
+      ],
+      "id": "964d0ea8-af1a-4861-a102-8348c8b479f0",
+      "name": "Format API Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to fetch data from API\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        80
+      ],
+      "id": "57fa224b-4122-4e51-90c6-3bd36c501a7f",
+      "name": "Send Error Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"total_users\": {{$json.total_users}},\n  \"users\": {{ $json.users }}\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        640,
+        -112
+      ],
+      "id": "499ba33e-c829-4824-915e-523f7a3bb7cd",
+      "name": "Send Success Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger API Request": {
+      "main": [
+        [
+          {
+            "node": "Fetch Users from API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Users from API": {
+      "main": [
+        [
+          {
+            "node": "Check API Response Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Response Status": {
+      "main": [
+        [
+          {
+            "node": "Format API Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format API Response": {
+      "main": [
+        [
+          {
+            "node": "Send Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f2b7f58e-35f8-4bcd-925a-ca37515a819c",
+  "meta": {
+    "instanceId": "4afab8f9e286217cf61120568c8c214f2eecb2afad454e4186dea3fbb88841f8"
+  },
+  "id": "hSxUTfkeHuwOraRG",
+  "tags": []
+}

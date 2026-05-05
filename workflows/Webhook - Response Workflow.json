@@ -1,0 +1,174 @@
+{
+  "name": "Webhook - Response Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "0e0cfca1-46d4-4426-b231-6a43f00f060a",
+      "name": "Webhook",
+      "webhookId": "06a28fb5-6846-47a8-a134-b623924102df"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8990ca2f-28a7-4bc6-8634-53805aa6c5b1",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "6662b8e6-5c61-4c3c-ae94-f34cd2799bec",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "92e14fea-6985-46c0-a467-d204635de395",
+      "name": "Format Input Data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1ae7eee2-261c-4a54-8a8c-c3346e63feea",
+              "leftValue": "={{$json.name && $json.email}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "73d89fca-efd8-4854-af67-441a4e88334f",
+      "name": "Validate Required Fields"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"message\": \"Data received successfully\",\n  \"data\": {\n    \"name\": \"{{$json.name}}\",\n    \"email\": \"{{$json.email}}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        -128
+      ],
+      "id": "823b3b31-31b1-4d3b-8b3f-dc37871ab78a",
+      "name": "Send Success Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\",\n  \"message\": \"Name and email are required\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        96
+      ],
+      "id": "6ff3a7ef-6aa5-49a3-8b6c-e3ce221feceb",
+      "name": "Send Error Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Input Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Required Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Required Fields": {
+      "main": [
+        [
+          {
+            "node": "Send Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Error Response": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d0b3ea13-2b3e-4037-8df5-e3f8e7fe8aa9",
+  "meta": {
+    "instanceId": "4afab8f9e286217cf61120568c8c214f2eecb2afad454e4186dea3fbb88841f8"
+  },
+  "id": "oKM9FVWzmFvwxQdS",
+  "tags": []
+}
