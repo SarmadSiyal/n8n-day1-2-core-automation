@@ -57,7 +57,7 @@ Webhook → HTTP Request → IF → Set → Response
 
 #### 🔹 Preview
 
-![API Integration Workflow](assets/workflow-2-api-fetch.png)
+![API Integration Workflow](assets/API_Integration_Workflow.png)
 
 ---
 
@@ -90,6 +90,13 @@ The workflows are designed with focus on:
 
 ---
 
+## 🎥 Demo Video
+A demonstration of both workflows is available here:
+
+[Watch Demo Video](YOUR_VIDEO_LINK_HERE)
+
+---
+
 ## 👤 Author
 
 Sarmad Siyal
@@ -99,8 +106,3 @@ Sarmad Siyal
 ## 📌 Notes
 
 This repository represents the foundational automation workflows built during the internship probation phase.
-
-## 🎥 Demo Video
-A demonstration of both workflows is available here:
-
-[Watch Demo Video](YOUR_VIDEO_LINK_HERE)
